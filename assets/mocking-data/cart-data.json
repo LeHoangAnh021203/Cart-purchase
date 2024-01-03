@@ -1,0 +1,28 @@
+{
+  "cartItems": [
+    {
+      "image": "assets/images/beef_with_potato.png",
+      "itemName": "Beef with potato",
+      "quantity": 1,
+      "price": "150"
+    },
+    {
+      "image": "assets/images/healthy_food.png",
+      "itemName": "Healthy food",
+      "quantity": 1,
+      "price": "40"
+    },
+    {
+      "image": "assets/images/salad_chicken.png",
+      "itemName": "Salad chicken",
+      "quantity": 1,
+      "price": "170"
+    }
+  ],
+  "cardDetails": {
+    "bankName": "Vietcombank",
+    "number": "1234:5678:1234:5678",
+    "nameOnCard": "Le Hoang Anh",
+    "expiredDate": "12/20"
+  }
+}
