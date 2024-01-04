@@ -127,9 +127,6 @@ table {
   font-size: 10px;
 }
 
-.large-title {
-  font-size: 20px;
-}
 
 .cardNumber {
   border: white 1px solid;
@@ -157,7 +154,7 @@ table {
   padding-left: 40px;
 }
 ::placeholder {
-  font-size: 25px;
+  font-size: 20px;
   color: white;
 }
 
@@ -188,12 +185,18 @@ table {
   width: 175px;
   height: 5vh;
   font-size: 20px;
+  color: white;
 }
 
 select {
   background: none;
   border: none;
   color: white;
+  font-size: 20px;
+}
+
+option{
+  color: #3a3d50;
 }
 
 .checkOut {
@@ -247,7 +250,7 @@ select {
 
 .item-wrapper {
   width: 700px;
-  height: 6vh;
+  max-height: 6vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -256,8 +259,9 @@ select {
 }
 
 .item-area {
+  overflow-y: auto;
   width: 100%;
-  height: 100%;
+  height: 500px;
 }
 
 .hr-element {
@@ -278,4 +282,26 @@ margin-left: 40vw;
 
 label{
   box-shadow:  1px 1px 5px  grey;
+}
+
+.big-div-element{
+  overflow-y: scroll;
+  max-height: 200px;
+}
+
+.cvv-input{
+  background: none;
+  width: 75px;
+  height: 2vh;
+  border: none;
+  color: white;
+  font-size: 20px;
+}
+
+.name-input{
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  height: 5vh;
 }
