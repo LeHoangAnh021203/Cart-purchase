@@ -15,7 +15,7 @@ body {
 .container {
   width: 95vw;
   height: 90vh;
-  background-color: white;
+  background-color: #e6e8ee;
   border-radius: 5px;
   position: relative;
 }
@@ -27,24 +27,29 @@ body {
   position: absolute;
   display: flex;
   justify-content: center;
-  align-items: center;
+  display: block;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
 }
 
 .right-container {
   width: 40%;
   height: 100%;
-  background-color: yellow;
+  background-color: #e6e8ee;
   position: absolute;
   right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .card-detail {
   width: 85%;
   height: 90%;
   background-color: #a1b2c2;
+  border-radius: 20px;
 }
 
 .card-title {
@@ -61,6 +66,8 @@ body {
   right: 10px;
   color: white;
   display: flex;
+  border-radius: 20px;
+  box-shadow: 0px 1px 5px gray;
 }
 
 table {
@@ -161,6 +168,7 @@ table {
   height: 9vh;
   margin-top: 10px;
   padding: 10px;
+  box-shadow:1px 1px 5px  grey;
 }
 
 .explration-explration {
@@ -200,18 +208,74 @@ select {
   background-color: #3a3d50;
   color: white;
   border-radius: 10px;
-  width: 15vw;
+  width: 10vw;
   height: 60%;
   font-size: 15px;
 }
 
 .header-title {
-  width: 85%;
-  height: 90%;
+  width: 100%;
+  padding: 20px 0px 20px 50px;
+  font-size: 30px;
+}
+
+.quantity-control-wrapper {
+  border: 1px solid black;
+  width: 5vw;
+  height: 4vh;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border-radius: 20px;
+}
+
+.quantity {
+  margin-left: 6px;
+}
+
+.minus-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+}
+
+.plus-button {
+  background: none;
+  border: none;
+  font-size: 20px;
 }
 
 .item-wrapper {
+  width: 700px;
+  height: 6vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 50px;
+  margin-right: 20px;
+}
+
+.item-area {
+  width: 100%;
+  height: 100%;
+}
+
+.hr-element {
+  border: 1px solid #959999;
+  width: 90%;
+  box-shadow: 3px 0px 2px black;
+}
+
+.sub-element{
+font-size: 15px;
+margin-left: 40vw;
+}
+
+.total-element{
+  padding-left: 20px;
+  font-size: 30px;
+}
+
+label{
+  box-shadow:  1px 1px 5px  grey;
 }
