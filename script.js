@@ -46,6 +46,8 @@ let cartData = {
   ],
 };
 
+
+
 function quantityElement(quantityNumber) {
   const quantityControlWrapper = document.createElement("div");
   const minusBtn = document.createElement("button");
@@ -60,6 +62,31 @@ function quantityElement(quantityNumber) {
   quantity.textContent = quantityNumber;
   minusBtn.innerHTML = "-";
   plusBtn.innerHTML = "+";
+
+  minusBtn.addEventListener("click", function () {
+    if (quantityNumber > 0) {
+      quantityNumber--;
+      quantity.textContent = quantityNumber;
+    }
+  });
+
+  plusBtn.addEventListener("click", function () {
+    quantityNumber++;
+    quantity.textContent = quantityNumber;
+  });
+
+  // cancel.addEventListener("click", function () {
+  //   // Lấy index của mục trong cartItems
+  //   const indexToRemove = cartData.cartItems.findIndex(cartItem => cartItem.itemName === span.textContent);
+
+  // //   // Xóa mục từ cartItems
+  //   if (indexToRemove !== -1) {
+  //     cartData.cartItems.splice(indexToRemove, 1);
+  //     handleGetCartData(); // Cập nhật hiển thị giỏ hàng
+  //   }
+  // });
+
+
   quantityControlWrapper.appendChild(minusBtn);
   quantityControlWrapper.appendChild(quantity);
   quantityControlWrapper.appendChild(plusBtn);
@@ -83,6 +110,7 @@ function priceElement(price) {
 function handleGetCartData() {
   const cartItems = cartData.cartItems;
   let totalValue = 0;
+  // let Price = 0;
 
   
   if (cartItems?.length) {
@@ -90,6 +118,8 @@ function handleGetCartData() {
     const itemArea = document.querySelector(".item-area");
     const subTotalArea = document.querySelector(".sub-area");
     if (!itemArea) return;
+
+    itemArea.innerHTML = '';
 
     cartItems.forEach((item) => {
       // const bigDivElement = document.createElement("div");
@@ -102,25 +132,39 @@ function handleGetCartData() {
       const hrElement = document.createElement("hr");
 
       cancel.innerHTML = "X"
+      cancel.style.cursor = "pointer";
+
+      cancel.addEventListener('click', function () {
+        console.log('Cancel button clicked!');
+        const indexToRemove = cartItems.findIndex(item => item.itemName === span.textContent);
+        console.log('Index to remove:', indexToRemove);
+        if (indexToRemove !== -1) {
+          cartItems.splice(indexToRemove, 1);
+          handleGetCartData(); // Update the cart display
+        }
+      });
+
       image.src = item.image;
       image.style.width = "15%";
 
       divElement.classList.add("item-wrapper");
       hrElement.classList.add("hr-element");
-      // bigDivElement.classList.add("big-div-element");
       
+      // price.textContent = `$${parseInt(item.price) * item.quantity}`;
+
       divElement.appendChild(image);
       span.textContent = item.itemName;
       divElement.appendChild(span);
       divElement.appendChild(quantity);
       divElement.appendChild(priceEl);
       divElement.appendChild(cancel);
-      // bigDivElement.appendChild(divElement);
       fragment.appendChild(divElement);
       fragment.appendChild(hrElement);
       
       totalValue += parseInt(item.price) * item.quantity;
-      // totalElement.textContent = "Subtotal $" + totalValue;
+      // Price += parseInt(item.price) * item.quantity;
+      // priceEl.textContent = `$${Price}`;
+      
     });
     const subElement = document.createElement("span");
     const totalElement = document.createElement("span");
@@ -133,6 +177,13 @@ function handleGetCartData() {
 
     subElement.classList.add("sub-element");
     totalElement.classList.add("total-element");
+
+    document.querySelectorAll('.item-wrapper span[aria-label="cancel"]').forEach((cancelBtn, index) => {
+      cancelBtn.addEventListener('click', () => {
+        cartItems.splice(index, 1); // Remove the item from the cartItems array
+        handleGetCartData(); // Update the cart display
+      });
+    });
   } else {
     console.error("Mảng cartItems rỗng.");
   }
@@ -168,6 +219,65 @@ function handleGetCardData() {
       element.textContent = "VISA";
     });
   }
+}
+
+function limitInput(element){
+  let inputValue = element.value;
+
+  inputValue = inputValue.replace(/[^0-9]/g, '');
+
+  if (inputValue.length > 4){
+    inputValue = inputValue.slice(0, 4);
+  }
+
+  element.value = inputValue;
+
+  const errorMessage = document.createElement("span");
+
+  if (!/[0-9]/.test(element.value)){
+    window.alert('Only numer!!!');
+    document.body.appendChild(errorMessage);
+  }
+}
+
+function limitCV(element){
+  let inputValue = element.value;
+
+  inputValue = inputValue.replace(/[^0-9]/g, '');
+
+  if (inputValue.length > 3){
+    inputValue = inputValue.slice(0, 3);
+  }
+
+  element.value = inputValue;
+
+  const errorMessage = document.createElement("span");
+  errorMessage.style.color = 'red';
+
+  if (!/[0-9]/.test(element.value)){
+    window.alert('Only numer!!!');
+    document.body.appendChild(errorMessage);
+  }
+}
+
+function limitName(element){
+  let inputValue = element.value;
+
+  inputValue = inputValue.replace(/[^a-zA-Z]/g, '');
+
+  if (inputValue.length > 50){
+    inputValue = inputValue.slice(0, 50);
+  }
+  element.value = inputValue;
+
+  const errorMessage = document.createElement("span");
+  errorMessage.style.color = 'red';
+
+  if (!/[a-zA-Z]/.test(element.value)){
+    window.alert('Only alphabets!!!');
+    document.body.appendChild(errorMessage);
+  }
+
 }
 
 

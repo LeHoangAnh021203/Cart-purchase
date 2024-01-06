@@ -51,16 +51,16 @@
           <div class="card-infor">
             <label class="nameOnCard" for="">
               <span class="small-title">Name On Card</span>
-              <span><input class="name-input" type="text" placeholder="Diana Smith"></span>
+              <span><input oninput="limitName(this, 50)" class="name-input" type="text" placeholder="Diana Smith"></span>
             </label>
 
             <label class="cardNumber" for="">
               <span class="small-title">Card Number</span>
-              <span>
-                <input type="text" placeholder="...." />
-                <input class="input2" type="text" placeholder="...." />
-                <input class="input2" type="text" placeholder="...." />
-                <input class="input2" type="text" placeholder="5432" />
+              <span >
+                <input type="text" placeholder="...."  oninput="limitInput(this, 4)"/>
+                <input class="input2" type="text" placeholder="...." oninput="limitInput(this, 4)"/>
+                <input class="input2" type="text" placeholder="...." oninput="limitInput(this, 4)"/>
+                <input class="input2" type="text" placeholder="5432" oninput="limitInput(this, 4)"/>
               </span>
             </label>
 
@@ -89,7 +89,7 @@
                     <option value="">12</option>
                   </select>
                 </td>
-                <td class="yyyy">
+                <td class="yyyy" id="yyyy">
                   yyyy
                   <select name="yyyy" id="yyyy">
                     <option value=""></option>
@@ -100,7 +100,7 @@
                     <option value="">2006</option>
                   </select>
                 </td>
-                <td><input class="cvv-input" type="text" placeholder="xxx"></td>
+                <td><input class="cvv-input" type="text" placeholder="xxx" oninput="limitCV(this, 3)"></td>
               </tr>
             </table>
           </div>
