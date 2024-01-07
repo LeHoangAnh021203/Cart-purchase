@@ -160,7 +160,10 @@ function handleGetCartData() {
       fragment.appendChild(divElement);
       fragment.appendChild(hrElement);
 
-      totalValue += parseInt(item.price) * item.quantity;
+      const cloneCartItem = cartData.cartItems[index];
+      let price = +cloneCartItem.price;
+      const pricePerItem = price / cloneCartItem.quantity;
+      totalValue += pricePerItem * item.quantity;
     });
 
     const subTotal = `<span class="sub-element">Subtotal</span> <span class="total-element">$${totalValue}</span>`;
