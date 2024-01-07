@@ -42,19 +42,24 @@ let cartData = {
       quantity: 1,
       price: "170",
     },
-    
   ],
 };
 
+let validator = {
+  set: function (target, key, value) {
+    handleGetCartData(); // Update the cart display
+    return true;
+  },
+};
+let dataStorage = new Proxy(cartData, validator);
 
-
-function quantityElement(quantityNumber) {
+function quantityElement(quantityNumber, itemIndex) {
   const quantityControlWrapper = document.createElement("div");
   const minusBtn = document.createElement("button");
   const plusBtn = document.createElement("button");
   const quantity = document.createElement("span");
 
-  quantityControlWrapper.classList.add("quantity-control-wrapper")
+  quantityControlWrapper.classList.add("quantity-control-wrapper");
   minusBtn.classList.add("minus-button");
   plusBtn.classList.add("plus-button");
   quantity.classList.add("quantity");
@@ -62,30 +67,27 @@ function quantityElement(quantityNumber) {
   quantity.textContent = quantityNumber;
   minusBtn.innerHTML = "-";
   plusBtn.innerHTML = "+";
+  const handleUpdateItem = (isPlus = false) => {
+    let price = +cartData.cartItems[itemIndex].price;
+    const pricePerItem = price / quantityNumber;
+
+    if (isPlus) quantityNumber++;
+    else quantityNumber--;
+
+    quantity.textContent = quantityNumber;
+    price = pricePerItem * quantityNumber;
+    cartData.cartItems[itemIndex].quantity = quantityNumber;
+    cartData.cartItems[itemIndex].price = price.toString();
+    dataStorage.cardItems = cartData.cartItems;
+  };
 
   minusBtn.addEventListener("click", function () {
-    if (quantityNumber > 0) {
-      quantityNumber--;
-      quantity.textContent = quantityNumber;
-    }
+    if (quantityNumber > 1) handleUpdateItem();
   });
 
   plusBtn.addEventListener("click", function () {
-    quantityNumber++;
-    quantity.textContent = quantityNumber;
+    handleUpdateItem(true);
   });
-
-  // cancel.addEventListener("click", function () {
-  //   // Lấy index của mục trong cartItems
-  //   const indexToRemove = cartData.cartItems.findIndex(cartItem => cartItem.itemName === span.textContent);
-
-  // //   // Xóa mục từ cartItems
-  //   if (indexToRemove !== -1) {
-  //     cartData.cartItems.splice(indexToRemove, 1);
-  //     handleGetCartData(); // Cập nhật hiển thị giỏ hàng
-  //   }
-  // });
-
 
   quantityControlWrapper.appendChild(minusBtn);
   quantityControlWrapper.appendChild(quantity);
@@ -108,39 +110,38 @@ function priceElement(price) {
 }
 
 function handleGetCartData() {
-  const cartItems = cartData.cartItems;
   let totalValue = 0;
-  // let Price = 0;
+  const itemArea = document.querySelector(".item-area");
+  const subTotalArea = document.querySelector(".sub-area");
 
-  
-  if (cartItems?.length) {
+  if (cartData.cartItems?.length) {
     const fragment = new DocumentFragment();
-    const itemArea = document.querySelector(".item-area");
-    const subTotalArea = document.querySelector(".sub-area");
     if (!itemArea) return;
 
-    itemArea.innerHTML = '';
+    itemArea.innerHTML = "";
+    subTotalArea.innerHTML = "";
 
-    cartItems.forEach((item) => {
-      // const bigDivElement = document.createElement("div");
+    cartData.cartItems.forEach((item, index) => {
       const divElement = document.createElement("div");
       const span = document.createElement("span");
       const image = document.createElement("img");
-      const quantity = quantityElement(item.quantity);
+      const quantity = quantityElement(item.quantity, index);
       const priceEl = priceElement(item.price);
       const cancel = document.createElement("span");
       const hrElement = document.createElement("hr");
 
-      cancel.innerHTML = "X"
+      cancel.innerHTML = "X";
       cancel.style.cursor = "pointer";
 
-      cancel.addEventListener('click', function () {
-        console.log('Cancel button clicked!');
-        const indexToRemove = cartItems.findIndex(item => item.itemName === span.textContent);
-        console.log('Index to remove:', indexToRemove);
-        if (indexToRemove !== -1) {
-          cartItems.splice(indexToRemove, 1);
-          handleGetCartData(); // Update the cart display
+      cancel.addEventListener("click", function () {
+        console.log("Cancel button clicked!");
+        const indexToRemove = cartData.cartItems.findIndex(
+          (_item, itemIndex) => index === itemIndex
+        );
+        console.log("Index to remove:", indexToRemove);
+        if (indexToRemove > -1) {
+          cartData.cartItems.splice(indexToRemove, 1);
+          dataStorage.cardItems = cartData.cartItems;
         }
       });
 
@@ -149,8 +150,6 @@ function handleGetCartData() {
 
       divElement.classList.add("item-wrapper");
       hrElement.classList.add("hr-element");
-      
-      // price.textContent = `$${parseInt(item.price) * item.quantity}`;
 
       divElement.appendChild(image);
       span.textContent = item.itemName;
@@ -160,32 +159,18 @@ function handleGetCartData() {
       divElement.appendChild(cancel);
       fragment.appendChild(divElement);
       fragment.appendChild(hrElement);
-      
+
       totalValue += parseInt(item.price) * item.quantity;
-      // Price += parseInt(item.price) * item.quantity;
-      // priceEl.textContent = `$${Price}`;
-      
     });
-    const subElement = document.createElement("span");
-    const totalElement = document.createElement("span");
 
-    subElement.textContent = "Subtotal";
-    totalElement.textContent = `$${totalValue}`;
+    const subTotal = `<span class="sub-element">Subtotal</span> <span class="total-element">$${totalValue}</span>`;
     itemArea.appendChild(fragment);
-    subTotalArea.appendChild(subElement);
-    subTotalArea.appendChild(totalElement);
-
-    subElement.classList.add("sub-element");
-    totalElement.classList.add("total-element");
-
-    document.querySelectorAll('.item-wrapper span[aria-label="cancel"]').forEach((cancelBtn, index) => {
-      cancelBtn.addEventListener('click', () => {
-        cartItems.splice(index, 1); // Remove the item from the cartItems array
-        handleGetCartData(); // Update the cart display
-      });
-    });
+    subTotalArea.innerHTML = subTotal;
   } else {
     console.error("Mảng cartItems rỗng.");
+    itemArea.innerHTML = "There are no item in the cart, please get some!";
+    const subTotal = `<span class="sub-element">Subtotal</span> <span class="total-element">$0</span>`;
+    subTotalArea.innerHTML = subTotal;
   }
 }
 
@@ -200,7 +185,6 @@ function handleGetCardData() {
     const cardNumElements = document.querySelectorAll(".card-num");
     const cardDateElement = document.querySelector(".card-date");
     const cardNameElements = document.querySelectorAll(".card-name");
-   
 
     bankNameElement.textContent = cardDetails.bankName;
 
@@ -214,19 +198,15 @@ function handleGetCardData() {
     cardNameElements.forEach((element) => {
       element.textContent = cardDetails.nameOnCard;
     });
-
-    cardTypeElements.forEach((element) => {
-      element.textContent = "VISA";
-    });
   }
 }
 
-function limitInput(element){
+function limitInput(element) {
   let inputValue = element.value;
 
-  inputValue = inputValue.replace(/[^0-9]/g, '');
+  inputValue = inputValue.replace(/[^0-9]/g, "");
 
-  if (inputValue.length > 4){
+  if (inputValue.length > 4) {
     inputValue = inputValue.slice(0, 4);
   }
 
@@ -234,52 +214,50 @@ function limitInput(element){
 
   const errorMessage = document.createElement("span");
 
-  if (!/[0-9]/.test(element.value)){
-    window.alert('Only numer!!!');
+  if (!/[0-9]/.test(element.value)) {
+    window.alert("Only numer!!!");
     document.body.appendChild(errorMessage);
   }
 }
 
-function limitCV(element){
+function limitCV(element) {
   let inputValue = element.value;
 
-  inputValue = inputValue.replace(/[^0-9]/g, '');
+  inputValue = inputValue.replace(/[^0-9]/g, "");
 
-  if (inputValue.length > 3){
+  if (inputValue.length > 3) {
     inputValue = inputValue.slice(0, 3);
   }
 
   element.value = inputValue;
 
   const errorMessage = document.createElement("span");
-  errorMessage.style.color = 'red';
+  errorMessage.style.color = "red";
 
-  if (!/[0-9]/.test(element.value)){
-    window.alert('Only numer!!!');
+  if (!/[0-9]/.test(element.value)) {
+    window.alert("Only numer!!!");
     document.body.appendChild(errorMessage);
   }
 }
 
-function limitName(element){
+function limitName(element) {
   let inputValue = element.value;
 
-  inputValue = inputValue.replace(/[^a-zA-Z]/g, '');
+  inputValue = inputValue.replace(/[^a-zA-Z]/g, "");
 
-  if (inputValue.length > 50){
+  if (inputValue.length > 50) {
     inputValue = inputValue.slice(0, 50);
   }
   element.value = inputValue;
 
   const errorMessage = document.createElement("span");
-  errorMessage.style.color = 'red';
+  errorMessage.style.color = "red";
 
-  if (!/[a-zA-Z]/.test(element.value)){
-    window.alert('Only alphabets!!!');
+  if (!/[a-zA-Z]/.test(element.value)) {
+    window.alert("Only alphabets!!!");
     document.body.appendChild(errorMessage);
   }
-
 }
-
 
 handleGetCartData();
 handleGetCardData();
